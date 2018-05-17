@@ -1,4 +1,7 @@
 
+RISCV_GNU_TOOLCHAIN_INSTALL_PREFIX = /opt/riscv32
+TOOLCHAIN_PREFIX = $(RISCV_GNU_TOOLCHAIN_INSTALL_PREFIX)i/bin/riscv32-unknown-elf-
+
 # ---- iCE40 HX8K Breakout Board ----
 
 hx8ksim: hx8kdemo_tb.vvp firmware.hex
@@ -36,13 +39,13 @@ hx8kprog_fw: firmware.bin
 # ---- Example Firmware ----
 
 firmware.elf: sections.lds start.s firmware.c
-	riscv32-unknown-elf-gcc -march=rv32imc -Wl,-Bstatic,-T,sections.lds,--strip-debug -ffreestanding -nostdlib -o firmware.elf start.s firmware.c
+	$(TOOLCHAIN_PREFIX)gcc -march=rv32imc -Wl,-Bstatic,-T,sections.lds,--strip-debug -ffreestanding -nostdlib -o firmware.elf start.s firmware.c
 
 firmware.hex: firmware.elf
-	riscv32-unknown-elf-objcopy -O verilog firmware.elf /dev/stdout | sed -e '1 s/@00000000/@00100000/; 2,65537 d;' > firmware.hex
+	$(TOOLCHAIN_PREFIX)objcopy -O verilog firmware.elf /dev/stdout | sed -e '1 s/@00000000/@00100000/; 2,65537 d;' > firmware.hex
 
 firmware.bin: firmware.elf
-	riscv32-unknown-elf-objcopy -O binary firmware.elf /dev/stdout | tail -c +1048577 > firmware.bin
+	$(TOOLCHAIN_PREFIX)objcopy -O binary firmware.elf /dev/stdout | tail -c +1048577 > firmware.bin
 
 # ---- Testbench for SPI Flash Model ----
 
