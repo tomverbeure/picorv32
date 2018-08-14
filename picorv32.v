@@ -2297,7 +2297,7 @@ module picorv32_pcpi_fast_mul #(
 		end
 		if (!MUL_CLKGATE || active[1]) begin
 `ifdef RISCV_FORMAL_ALTOPS
-			rd <= $signed(EXTRA_MUL_FFS ? {rs1_q, rs1_q} : {rs1, rs1}) + $signed(EXTRA_MUL_FFS ? {rs2_q, rs2_q} : {rs2, rs2});
+			rd <= ($signed(EXTRA_MUL_FFS ? {rs1_q, rs1_q} : {rs1, rs1}) + $signed(EXTRA_MUL_FFS ? {rs2_q, rs2_q} : {rs2, rs2})) >> 2;
 `else
 			rd <= $signed(EXTRA_MUL_FFS ? rs1_q : rs1) * $signed(EXTRA_MUL_FFS ? rs2_q : rs2);
 `endif
